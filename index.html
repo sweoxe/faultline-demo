@@ -1,0 +1,196 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0b1020">
+<title>FAULTLINE — Operational Resilience</title>
+<style>
+:root {
+  --bg:#0b1020; --panel:#121a2d; --line:#26334c;
+  --text:#edf2ff; --muted:#91a0bb; --cyan:#55d6d2;
+  --red:#ff657a; --yellow:#f4c66a; --green:#6ed6a0;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);
+font:15px system-ui,-apple-system,Segoe UI,sans-serif}
+header{padding:22px 5%;border-bottom:1px solid var(--line);
+display:flex;justify-content:space-between;align-items:center;gap:12px}
+.brand{font-size:21px;font-weight:850;letter-spacing:3px}
+.brand span{color:var(--cyan)}
+.status{font-size:12px;color:var(--green)}
+main{max-width:1100px;margin:auto;padding:28px 5%}
+.eyebrow{color:var(--cyan);font-size:11px;letter-spacing:2px;font-weight:700}
+h1{font-size:clamp(27px,5vw,42px);margin:10px 0}
+.sub{color:var(--muted);line-height:1.6}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin:25px 0}
+.card{background:var(--panel);border:1px solid var(--line);
+border-radius:13px;padding:18px}
+.metric{font-size:29px;font-weight:800;margin-top:8px}
+.small{font-size:12px;color:var(--muted)}
+.section{margin-top:28px}
+.section h2{font-size:18px}
+.flow{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:18px 0}
+.node{background:#1a2940;border:1px solid #344763;
+padding:13px;border-radius:10px;flex:1;min-width:125px}
+.node b{display:block;margin-bottom:5px}
+.arrow{color:var(--cyan);font-size:20px}
+select,button{font:inherit;border-radius:9px;padding:12px;
+border:1px solid var(--line);background:#18243a;color:var(--text)}
+select{width:100%;margin:12px 0}
+button{background:var(--cyan);color:#07131b;font-weight:800;
+border:0;cursor:pointer;width:100%;margin-top:8px}
+button:active{transform:scale(.99)}
+.result{display:none;margin-top:18px}
+.result.show{display:block}
+.risk{border-left:3px solid var(--red);padding:12px 14px;
+background:#251b2b;border-radius:5px;margin:12px 0}
+.good{border-left-color:var(--green);background:#152a2a}
+.tag{font-size:11px;padding:4px 8px;border-radius:20px;
+background:#392330;color:#ff9aaa}
+footer{padding:25px 5%;text-align:center;color:var(--muted);
+border-top:1px solid var(--line);font-size:12px}
+@media(max-width:650px){.grid{grid-template-columns:1fr}
+.flow{align-items:stretch}.arrow{display:none}}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">FAULT<span>LINE</span></div>
+  <div class="status">● SYSTEM ONLINE</div>
+</header>
+<main>
+  <div class="eyebrow">OPERATIONAL RESILIENCE PLATFORM</div>
+  <h1>Know where your business can fail.</h1>
+  <p class="sub">Simulate operational failures. Discover hidden dependencies.
+  Strengthen critical business processes before disruption happens.</p>
+
+  <div class="grid">
+    <div class="card">
+      <div class="small">PROCESSES MONITORED</div>
+      <div class="metric">01</div>
+      <div class="small">Demo environment</div>
+    </div>
+    <div class="card">
+      <div class="small">RISK LEVEL</div>
+      <div class="metric" style="color:var(--yellow)">MEDIUM</div>
+      <div class="small">Initial assessment</div>
+    </div>
+    <div class="card">
+      <div class="small">KNOWN WEAK POINTS</div>
+      <div class="metric" id="weakpoints">02</div>
+      <div class="small">Demo assessment</div>
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="eyebrow">PROCESS MAP / DEMO-001</div>
+    <h2>Purchase approval workflow</h2>
+    <p class="sub">A simplified example of a corporate purchasing process.</p>
+    <div class="flow">
+      <div class="node"><b>01 · Request</b><span class="small">Employee</span></div>
+      <div class="arrow">→</div>
+      <div class="node"><b>02 · Approval</b><span class="small">Manager</span></div>
+      <div class="arrow">→</div>
+      <div class="node"><b>03 · Payment</b><span class="small">Finance / ERP</span></div>
+      <div class="arrow">→</div>
+      <div class="node"><b>04 · Delivery</b><span class="small">Supplier</span></div>
+    </div>
+  </section>
+
+  <section class="section card">
+    <div class="eyebrow">FAILURE SIMULATOR</div>
+    <h2>What happens if something fails?</h2>
+    <p class="sub">Choose a disruption and run a deterministic demo simulation.</p>
+    <label for="scenario">Failure scenario</label>
+    <select id="scenario">
+      <option value="manager">Manager becomes unavailable</option>
+      <option value="erp">ERP system goes offline</option>
+      <option value="supplier">Critical supplier disappears</option>
+      <option value="finance">Finance approver unavailable</option>
+    </select>
+    <button onclick="runSimulation()">▶ RUN SIMULATION</button>
+    <div class="result" id="result" aria-live="polite">
+      <div class="eyebrow">SIMULATION REPORT</div>
+      <h2 id="resultTitle"></h2>
+      <div id="resultBody"></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="eyebrow">ABOUT THE ENGINE</div>
+    <h2>Business processes deserve tests too.</h2>
+    <p class="sub">FAULTLINE is being developed as a testing layer for
+    business operations. This prototype uses predefined rules and sample
+    data. Future versions will support process documents, dependency graphs,
+    AI-assisted scenario generation and regression testing.</p>
+  </section>
+</main>
+<footer>FAULTLINE LAB · EARLY PROTOTYPE · DEMO DATA ONLY</footer>
+
+<script>
+const scenarios = {
+ manager: {
+  title:"Approval bottleneck detected",
+  level:"HIGH RISK",
+  points:3,
+  items:[
+   "The approval stage depends on one manager.",
+   "No backup approver is defined in this demo process.",
+   "Requests may accumulate until the manager returns."
+  ],
+  fix:"Define a secondary approver and an escalation rule."
+ },
+ erp: {
+  title:"Payment stage interrupted",
+  level:"HIGH RISK",
+  points:2,
+  items:[
+   "Payment processing depends on ERP availability.",
+   "No manual fallback procedure is defined in this demo."
+  ],
+  fix:"Document a controlled manual fallback and reconciliation procedure."
+ },
+ supplier: {
+  title:"Supplier dependency exposed",
+  level:"CRITICAL",
+  points:3,
+  items:[
+   "The delivery stage has one critical supplier.",
+   "No alternative supplier is recorded.",
+   "Delivery deadlines may be missed."
+  ],
+  fix:"Register an alternative supplier and define activation criteria."
+ },
+ finance: {
+  title:"Finance approval bottleneck",
+  level:"HIGH RISK",
+  points:2,
+  items:[
+   "Finance approval has a single assigned owner.",
+   "No delegation or backup approval route is defined."
+  ],
+  fix:"Define delegated approval authority and an audit trail."
+ }
+};
+
+function runSimulation(){
+ const s=scenarios[document.getElementById("scenario").value];
+ document.getElementById("resultTitle").textContent=s.title;
+ document.getElementById("weakpoints").textContent=s.points;
+ document.getElementById("resultBody").innerHTML=
+  '<p><span class="tag">'+s.level+'</span></p>'+
+  s.items.map(x=>'<div class="risk">'+x+'</div>').join('')+
+  '<div class="risk good"><b>RECOMMENDED ACTION</b><br>'+s.fix+'</div>'+
+  '<p class="small">Illustrative rule-based result. Not a production risk assessment.</p>';
+ document.getElementById("result").classList.add("show");
+}
+</script>
+  
+<script src="engine.js"></script>
+<script src="analysis.js"></script>
+<script src="dashboard.js"></script>
+
+</body>
+</html>
